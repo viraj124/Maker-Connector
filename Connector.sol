@@ -2,6 +2,10 @@ pragma solidity ^0.5.7;
 
 interface ProxyAction {
  function open(address manager, bytes32 ilk, address usr) external returns (uint cdp);
+ 
+ function lockETH(address manager, address ethJoin, uint cdp) external payable;
+ 
+ function lockETHAndDraw(address manager, address jug, address ethJoin, address daiJoin, uint cdp, uint wadD) external payable;
 }
 interface IERC20 {
     /**
@@ -83,8 +87,20 @@ contract Helper {
         proxyAction = 0xd1D24637b9109B7f61459176EdcfF9Be56283a7B;
     }
     
+    function getJug() public pure returns (address jug) {
+        jug = 0xcbB7718c9F39d05aEEDE1c472ca8Bf804b2f1EaD;
+    }
+    
+    function getDaiJoin() public pure returns (address daiJoin) {
+        daiJoin = 0xd1D24637b9109B7f61459176EdcfF9Be56283a7B;
+    }    
+    
+    function getEthJoin() public pure returns (address ethJoin) {
+        ethJoin = 0x775787933e92b709f2a3C70aa87999696e74A9F8;
+    }
+    
     function getSmartWallet() public pure returns (address smartWallet) {
-        smartWallet = 0xc19c5F0ecf68be63937cD1E9A43b4b4B19629c0f;
+        smartWallet = 0x5AA71a3ae1C0bd6ac27A1f28e1415fFFB6F15B8c;
     }
     
     function getDAI() public pure returns (address dai) {
@@ -92,9 +108,16 @@ contract Helper {
     }
 }
 
-contract MakerConnector is Helper{
+contract MakerConnector is Helper {
+
 function open(bytes32 ilk) public returns(uint) {
     ProxyAction(getProxyAction()).open(getCDPManager(), ilk, getSmartWallet());
+}
+
+function lockAndDraw(uint cdp, uint wadD) public payable {
+    ProxyAction(getProxyAction()).lockETH.value(msg.value)(getCDPManager(), getEthJoin(), cdp);
+
+    // ProxyAction(getProxyAction()).lockETHAndDraw(getCDPManager(), getJug(), getEthJoin(), getDaiJoin(), cdp, wadD);
 }
  
 }

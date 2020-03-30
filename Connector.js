@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+\import React, { Component } from 'react';
 import Web3 from 'web3';
 import './App.css';
 
@@ -33,17 +33,18 @@ class App extends Component {
     const web3 = window.web3
 
 
-    const cdp_manager_open = {"constant":false,"inputs":[{"internalType":"bytes32","name":"ilk","type":"bytes32"}],"name":"open","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"}
-    var cdp_manager_open_args = [
-      "0x3078643041314533353938313133323264393739393145303366383633613043"
+    const proxy_action = {"constant":false,"inputs":[{"internalType":"address","name":"manager","type":"address"},{"internalType":"address","name":"jug","type":"address"},{"internalType":"address","name":"ethJoin","type":"address"},{"internalType":"address","name":"daiJoin","type":"address"},{"internalType":"bytes32","name":"ilk","type":"bytes32"},{"internalType":"uint256","name":"wadD","type":"uint256"}],"name":"openLockETHAndDraw","outputs":[{"internalType":"uint256","name":"cdp","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"}
+    var proxy_action_args = [
+      "0x1476483dD8C35F25e568113C5f70249D3976ba21",
+      "0xcbB7718c9F39d05aEEDE1c472ca8Bf804b2f1EaD",
+      "0x775787933e92b709f2a3C70aa87999696e74A9F8",
+      "0x5AA71a3ae1C0bd6ac27A1f28e1415fFFB6F15B8c",
+      web3.utils.asciiToHex("ETH-A"),
+      "20000000000000000000"
       ]
-    const cdp_lock_draw = {"constant":false,"inputs":[{"internalType":"uint256","name":"cdp","type":"uint256"},{"internalType":"uint256","name":"wadD","type":"uint256"}],"name":"lockAndDraw","outputs":[],"payable":true,"stateMutability":"payable","type":"function"}
-    var cdp_lock_draw_args = [
-      "1337",
-      "100000000000"
-    ]
-    const makerLock = await web3.eth.abi.encodeFunctionCall(cdp_lock_draw, cdp_lock_draw_args)
-    console.log(makerLock)
+
+    const makerOpenLockDraw = await web3.eth.abi.encodeFunctionCall(proxy_action, proxy_action_args)
+    console.log(makerOpenLockDraw)
   }
 
   render() {
